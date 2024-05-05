@@ -2,14 +2,8 @@ import random
 import math
 import matplotlib.pyplot as plt
 
-# przekazywać kopie z -1 : 1
+# przekazywać kopie z 0 : 1
 def runLVQ(wejscie, wyniki):
-    # zmiana z daych -1 : 1 na 0 : 1
-    for n in range (0, len(wejscie)):
-        for m in range (0, 11):
-            wejscie[n][m] = (wejscie[n][m] + 1) / 2
-        wyniki[n] = int((wyniki[n] + 1) * 5)
-    #print(wyniki)
     # przygotowywanie wagi startowej, neurony z klasami 1 : 9
     wagi = []
     #for n in range(0, 9):
@@ -45,20 +39,13 @@ def runLVQ(wejscie, wyniki):
 
             # jeżeli wygrany zgadza się z wynikiem to zbliżamy go, alternatywnie oddalamy
             # +1 bo wartości są od 1 a indeksy od 0
-            #print( wygrany + 1, " : ", wyniki[wiersz])
             if wygrany + 1 == wyniki[wiersz]:
                 liczbaTrafionych += 1
-                #print("+ ", wagi[wygrany])
-                #print("with ", wejscie[wiersz])
                 for n in range(0, len(wejscie[wiersz])):
                     wagi[wygrany][n] += alfa * (wejscie[wiersz][n] - wagi[wygrany][n])
-                #print("+ ", wagi[wygrany])
             else:
-                #print("- ", wagi[wygrany])
-                #print("with ", wejscie[wiersz])
                 for n in range(0, len(wejscie[wiersz])):
                     wagi[wygrany][n] -= alfa * (wejscie[wiersz][n] - wagi[wygrany][n])
-                #print("- ", wagi[wygrany])
 
         print(epoka + 1, ": ", liczbaTrafionych, " / ", len(wejscie))
         celnosc.append(liczbaTrafionych / len(wejscie) * 100)
