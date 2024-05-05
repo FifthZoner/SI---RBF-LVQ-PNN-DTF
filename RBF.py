@@ -11,10 +11,8 @@ def aktywacjaRBF(prototyp, dane, beta):
 
 # przekazywać 0 : 1, numery w klasach
 # funkcja ogólna
-def runRBF(wejscie, wyniki, liczbaEpok, neuronyNaKlase):
+def runRBF(wejscie, wyniki, liczbaEpok, neuronyNaKlase, alfa, beta):
     # inne zmienne kontrolne
-    alfa = 0.002
-    beta = 0.005
     celnosc = []
 
     # dzielenie danych wg klas do stworzenia neuronów
@@ -78,7 +76,7 @@ def runRBF(wejscie, wyniki, liczbaEpok, neuronyNaKlase):
                 for n in range(0, len(wejscie[wiersz])):
                     wagi[ktory[0]][ktory[1]][n] -= alfa * (wejscie[wiersz][n] - wagi[ktory[0]][ktory[1]][n])
 
-        print(epoka + 1, ": ", liczbaTrafionych, " / ", len(wejscie))
+        print(epoka + 1, ": ", liczbaTrafionych, " / ", len(wejscie), " ( ", liczbaTrafionych / len(wejscie) * 100, "% )")
         celnosc.append(liczbaTrafionych / len(wejscie) * 100)
 
     # wyswietlanie wyników

@@ -10,17 +10,23 @@ inputRed = []
 inputWhite = []
 outputRed = []
 outputWhite = []
+outputColors = []
 
 # wczytywanie do tablic
 for n in dataRed.values:
     temp = n[0].split(';')
     inputRed.append([float(temp[0]), float(temp[1]), float(temp[2]), float(temp[3]), float(temp[4]), float(temp[5]), float(temp[6]), float(temp[7]), float(temp[8]), float(temp[9]), float(temp[10])])
     outputRed.append(int(temp[11]))
+    outputColors.append(0)
 
 for n in dataWhite.values:
     temp = n[0].split(';')
     inputWhite.append([float(temp[0]), float(temp[1]), float(temp[2]), float(temp[3]), float(temp[4]), float(temp[5]), float(temp[6]), float(temp[7]), float(temp[8]), float(temp[9]), float(temp[10])])
     outputWhite.append(int(temp[11]))
+    outputColors.append(1)
+
+# 0 - czerwony, 1 - biały
+inputBoth = inputRed.copy() + inputWhite.copy()
 
 # normalizacja -1 : 1
 for column in range(0, 11):
@@ -53,7 +59,7 @@ plt.ylabel("Wartości znormalizowane dla czerwonego")
 plt.show()
 
 plt.plot(inputWhite, 'o', markersize=1)
-plt.plot(outputWhite, 'o', markersize=3)
+#plt.plot(outputWhite, 'o', markersize=3)
 plt.ylabel("Wartości znormalizowane dla białego")
 #plt.legend(inputLabels)
 plt.show()
@@ -61,7 +67,13 @@ plt.show()
 # Radialna, LVQ, PNN, DTF
 from LVQ import runLVQ
 #runLVQ(inputRed.copy(), outputRed.copy())
+#runLVQ(inputWhite.copy(), outputWhite.copy())
+runLVQ(inputBoth.copy(), outputColors.copy())
 from RBF import runRBF
-#runRBF(inputRed.copy(), outputRed.copy(), 1000, 20)
+#runRBF(inputRed.copy(), outputRed.copy(), 300, 6, 0.001, 0.5)
+#runRBF(inputWhite.copy(), outputWhite.copy(), 1000, 3, 0.001, 0.5)
+#runRBF(inputBoth.copy(), outputColors.copy(), 250, 10, 0.001, 0.5)
 from PNN import runPNN
-runPNN(inputRed.copy(), outputRed.copy(), 0.005)
+#runPNN(inputRed.copy(), outputRed.copy(), 0.5)
+#runPNN(inputWhite.copy(), outputWhite.copy(), 0.5)
+#runPNN(inputBoth.copy(), outputColors.copy(), 0.5)

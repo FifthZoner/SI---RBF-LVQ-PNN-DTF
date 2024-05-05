@@ -4,20 +4,26 @@ import matplotlib.pyplot as plt
 
 # przekazywać kopie z 0 : 1
 def runLVQ(wejscie, wyniki):
+
+    opcje = {}
+    for n in wyniki:
+        opcje[n] = []
+    cechy = []
+    m = 0
+    for n in opcje:
+        cechy.append(n)
+        opcje[n] = m
+        m += 1
     # przygotowywanie wagi startowej, neurony z klasami 1 : 9
     wagi = []
-    #for n in range(0, 9):
-    #    wagi.append([])
-    #    for m in range (0, 11):
-    #        wagi[n].append(random.uniform(0, 1))
-    #        #print(wagi[n][m])
-    for n in range(0, 9):
+
+    for n in range(len(cechy)):
         wagi.append(wejscie.pop())
         wyniki.pop()
 
     # inne zmienne kontrolne
     alfa = 0.001
-    liczbaEpok = 10000
+    liczbaEpok = 1000
     celnosc = []
 
     # trenowanie
@@ -27,10 +33,9 @@ def runLVQ(wejscie, wyniki):
         for wiersz in range (0, len(wejscie)):
 
             # szukanie "wygranego"
-            dystanse = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+            dystanse = [0 for n in range(len(cechy))]
             for kolumna in range(0, len(wejscie[wiersz])):
                 for n in range(0, len(wagi)):
-                    #print(wagi[n][kolumna])
                     dystanse[n] += math.pow(wejscie[wiersz][kolumna] - wagi[n][kolumna], 2)
             wygrany = 0
             for n in range(1, len(dystanse)):
@@ -38,8 +43,7 @@ def runLVQ(wejscie, wyniki):
                     wygrany = n
 
             # jeżeli wygrany zgadza się z wynikiem to zbliżamy go, alternatywnie oddalamy
-            # +1 bo wartości są od 1 a indeksy od 0
-            if wygrany + 1 == wyniki[wiersz]:
+            if cechy[wygrany] == wyniki[wiersz]:
                 liczbaTrafionych += 1
                 for n in range(0, len(wejscie[wiersz])):
                     wagi[wygrany][n] += alfa * (wejscie[wiersz][n] - wagi[wygrany][n])
@@ -47,7 +51,7 @@ def runLVQ(wejscie, wyniki):
                 for n in range(0, len(wejscie[wiersz])):
                     wagi[wygrany][n] -= alfa * (wejscie[wiersz][n] - wagi[wygrany][n])
 
-        print(epoka + 1, ": ", liczbaTrafionych, " / ", len(wejscie))
+        print(epoka + 1, ": ", liczbaTrafionych, " / ", len(wejscie), " ( ", liczbaTrafionych / len(wejscie) * 100, "% )")
         celnosc.append(liczbaTrafionych / len(wejscie) * 100)
 
     # wyswietlanie wyników
