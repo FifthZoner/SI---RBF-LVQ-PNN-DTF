@@ -21,7 +21,7 @@ class Drzewo:
 def budowaDrzewa(wejscie, wyjscie, wartosci, ktoreWejscia, pozostalaWysokosc, unikalneCechy) -> Drzewo:
     # do zapisywania minimalnych wartości
     minGini = 10
-    minKtoreWejscie = 0
+    minIndeksTymczasowyWejscia = 0
     minKtoraWartoscWejscia = 0
     minCecha = 0
     # sprawdzamy dla każdej z kolumn z wejść
@@ -30,39 +30,50 @@ def budowaDrzewa(wejscie, wyjscie, wartosci, ktoreWejscia, pozostalaWysokosc, un
         for obecnaKtoraWartosc in range(obecnaKolumna[1], obecnaKolumna[2]):
             ileTrafienCech = [0 for n in range(unikalneCechy)]
             # sprawdzamy ile jest mniejszych bądź równych wartości dla danej kolumny i zliczamy które to cechy
+            ileUjetychWejsc = 0
             for wiersz in range(len(wejscie)):
-                if wejscie[wiersz][obecnaKolumna[0]] <= wartosci[obecnaKolumna[0]][obecnaKtoraWartosc]:
-                    ileTrafienCech[wyjscie[wiersz]] += 1
+                # sprawdzanie czy dany wiersz może być sprawdzony
+                czyLiczyc = True
+                for n in range(len(ktoreWejscia)):
+                    if wejscie[wiersz][obecnaKolumna[0]] < wartosci[obecnaKolumna[0]][obecnaKolumna[1]] or wejscie[wiersz][obecnaKolumna[0]] > wartosci[obecnaKolumna[0]][obecnaKolumna[2] - 1]:
+                        czyLiczyc = False
+                # sprawdzanie czy liczy się do trafionych
+                if czyLiczyc:
+                    ileUjetychWejsc += 1
+                    if wejscie[wiersz][obecnaKolumna[0]] <= wartosci[obecnaKolumna[0]][obecnaKtoraWartosc]:
+                        ileTrafienCech[wyjscie[wiersz]] += 1
+
             # szukamy cechy z największą ilością trafień
             max = 0
             for n in range(1, len(ileTrafienCech)):
                 if ileTrafienCech[n] > ileTrafienCech[max]:
                     max = n
-            gini = 1 - (ileTrafienCech[max] / len(wejscie))
-            if gini < minGini:
+            gini = 1 - (ileTrafienCech[max] / ileUjetychWejsc)
+            if gini <= minGini:
                 minGini = gini
-                minKtoreWejscie = obecnaKolumna[0]
+                minIndeksTymczasowyWejscia = obecnaKolumna[3]
                 minKtoraWartoscWejscia = obecnaKtoraWartosc
                 minCecha = max
+                #print(max)
                 if gini == 0:
                     break
             if minGini == 0:
                 break
-        if minGini == 0:
-            break
+        #if minGini == 0:
+            #break
 
     # po sprawdzeniu możemy wreszcie stworzyć gałąź drzewa z najlepszą wartością
     rezultat = Drzewo()
     rezultat.gini = minGini
     rezultat.nrCechy = minCecha
-    rezultat.wartosc = wartosci[minKtoreWejscie][minKtoraWartoscWejscia]
-    rezultat.nrWejscia = minKtoreWejscie
+    rezultat.wartosc = wartosci[ktoreWejscia[minIndeksTymczasowyWejscia][0]][minKtoraWartoscWejscia]
+    rezultat.nrWejscia = ktoreWejscia[minIndeksTymczasowyWejscia][0]
 
     # gini to 0, trzeba stworzyć tylko gałąź dla sytuacji fałszywej
     if minGini == 0 and pozostalaWysokosc > 0:
         # dodawanie fałszywej jeżeli jeszcze można
-        temp = [x for x in ktoreWejscia]
-        temp[minKtoreWejscie][1] = minKtoraWartoscWejscia + 1
+        temp = [x.copy() for x in ktoreWejscia]
+        temp[minIndeksTymczasowyWejscia][1] = minKtoraWartoscWejscia + 1
         mozna = False
         for n in temp:
             if n[2] - n[1] > 1:
@@ -71,19 +82,19 @@ def budowaDrzewa(wejscie, wyjscie, wartosci, ktoreWejscia, pozostalaWysokosc, un
             rezultat.falszywa = budowaDrzewa(wejscie, wyjscie, wartosci, temp.copy(), pozostalaWysokosc - 1, unikalneCechy)
     elif pozostalaWysokosc > 0:
         # dodawanie obu jeżeli można
-        print("przed ", ktoreWejscia)
-        temp = [x for x in ktoreWejscia]
-        temp[minKtoreWejscie][2] = minKtoraWartoscWejscia
+        #print("przed ", ktoreWejscia)
+        temp = [x.copy() for x in ktoreWejscia]
+        temp[minIndeksTymczasowyWejscia][2] = minKtoraWartoscWejscia
         mozna = False
         for n in temp:
             if n[2] - n[1] > 1:
                 mozna = True
-        print("po ", ktoreWejscia)
+        #print("po ", ktoreWejscia)
         if mozna:
             rezultat.prawdziwa = budowaDrzewa(wejscie, wyjscie, wartosci, temp.copy(), pozostalaWysokosc - 1, unikalneCechy)
 
-        temp = [x for x in ktoreWejscia]
-        temp[minKtoreWejscie][1] = minKtoraWartoscWejscia + 1
+        temp = [x.copy() for x in ktoreWejscia]
+        temp[minIndeksTymczasowyWejscia][1] = minKtoraWartoscWejscia + 1
         mozna = False
         for n in temp:
             if n[2] - n[1] > 1:
@@ -93,6 +104,25 @@ def budowaDrzewa(wejscie, wyjscie, wartosci, ktoreWejscia, pozostalaWysokosc, un
 
 
     return rezultat
+
+# zwraca wynik z gałęzi dla podanego wektora wejściowego
+def wynikZDrzewa(drzewo, wektor):
+    if wektor[drzewo.nrWejscia] <= drzewo.wartosc:
+        # jeżeli warunek został spełniony
+        if drzewo.prawdziwa != None:
+            # jeżeli jest dalsza gałąź zwróć wartość z jej sprawdzenia
+            return wynikZDrzewa(drzewo.prawdziwa, wektor)
+        else:
+            return drzewo.nrCechy
+    else:
+        if drzewo.falszywa != None:
+            # jeżeli jest dalsza gałąź zwróć wartość z jej sprawdzenia
+            return wynikZDrzewa(drzewo.falszywa, wektor)
+        else:
+            return drzewo.nrCechy
+
+
+
 
 # przekazywać 0 : 1, numery w klasach
 # funkcja ogólna
@@ -131,11 +161,33 @@ def runDTF(wejscie, wyniki, cechyNaDrzewo, maxWysokoscDrzewa):
     # następnie trzeba przygotować struktury drzew poprzez przechodzenie przez te wszystkie wartości
     # i sprawdzanie, która pierwsza zapewni nam gini = 0 (chyba tak to może działać a przyspieszy)
 
-    drzewo = budowaDrzewa(wejscie, wynikiNowe, wartosciWejsc, [[0, 0, len(wartosciWejsc[0])], [1, 0, len(wartosciWejsc[1])]], 4, len(cechyWgIndeksow))
+    print("Budowanie drzew...")
+
+    tablicaDrzew = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [9, 10]]
+
+    #drzewo = budowaDrzewa(wejscie, wynikiNowe, wartosciWejsc, [[8, 0, len(wartosciWejsc[8]), 0],
+    #                      [10, 0, len(wartosciWejsc[10]), 1]],
+    #                      1, len(cechyWgIndeksow))
+
+    drzewa  = [None for n in range(len(tablicaDrzew))]
+    for n in range(len(tablicaDrzew)):
+        print(n + 1, " / ", len(tablicaDrzew))
+        wejscia = []
+        for m in range(len(tablicaDrzew[n])):
+            wejscia.append([tablicaDrzew[n][m], 0, len(wartosciWejsc[tablicaDrzew[n][m]]), m])
+        drzewa[n] = budowaDrzewa(wejscie, wynikiNowe, wartosciWejsc, wejscia, 2, len(cechyWgIndeksow))
+
+    print("Sprawdzanie celności wyjścia...")
+
+    wynikiDrzew = [[] for n in range(len(drzewa))]
+
+    for n in range(len(wejscie)):
+        for m in range(len(drzewa)):
+            #wynikiDrzew[m].append(cechyWgIndeksow[wynikZDrzewa(drzewa[m], wejscie[n])])
+            wynikiDrzew[m].append(wynikZDrzewa(drzewa[m], wejscie[n]))
 
 
-
-
+    #print("Celność wytrenowanego drzewa to: ", trafione / len(wejscie) * 100, "%")
 
 
     print("koniec breakpoint")

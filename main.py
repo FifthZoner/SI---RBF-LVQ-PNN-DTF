@@ -64,6 +64,13 @@ plt.ylabel("Wartości znormalizowane dla białego")
 #plt.legend(inputLabels)
 plt.show()
 
+temp = {}
+for n in outputWhite:
+    temp[n] = 0
+for n in outputWhite:
+    temp[n] += 1
+print("częstości: ", temp)
+
 # Radialna, LVQ, PNN, DTF
 from LVQ import runLVQ
 #runLVQ(inputRed.copy(), outputRed.copy())
