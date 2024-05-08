@@ -28,9 +28,10 @@ def budowaDrzewa(wejscie, wyjscie, wartosci, ktoreWejscia, pozostalaWysokosc, un
     for obecnaKolumna in ktoreWejscia:
         # i dla każdej kolumny sprawdzamy gini dla wszystkich cech
         for obecnaKtoraWartosc in range(obecnaKolumna[1], obecnaKolumna[2]):
-            ileTrafienCech = [0 for n in range(unikalneCechy)]
+            ileTrafienCech = [[0, 0] for n in range(unikalneCechy)]
+            sumyTrafien = [0, 0]
             # sprawdzamy ile jest mniejszych bądź równych wartości dla danej kolumny i zliczamy które to cechy
-            ileUjetychWejsc = 0
+            ileUjetychWejsc = [0, 0]
             for wiersz in range(len(wejscie)):
                 # sprawdzanie czy dany wiersz może być sprawdzony
                 czyLiczyc = True
@@ -38,18 +39,35 @@ def budowaDrzewa(wejscie, wyjscie, wartosci, ktoreWejscia, pozostalaWysokosc, un
                     if wejscie[wiersz][obecnaKolumna[0]] < wartosci[obecnaKolumna[0]][obecnaKolumna[1]] or wejscie[wiersz][obecnaKolumna[0]] > wartosci[obecnaKolumna[0]][obecnaKolumna[2] - 1]:
                         czyLiczyc = False
                 # sprawdzanie czy liczy się do trafionych
+                #print(czyLiczyc)
                 if czyLiczyc:
-                    ileUjetychWejsc += 1
+
+                    ileTrafienCech[wyjscie[wiersz]][1] += 1
                     if wejscie[wiersz][obecnaKolumna[0]] <= wartosci[obecnaKolumna[0]][obecnaKtoraWartosc]:
-                        ileTrafienCech[wyjscie[wiersz]] += 1
+                        ileUjetychWejsc[0] += 1
+                        ileTrafienCech[wyjscie[wiersz]][0] += 1
+                        sumyTrafien[0] += 1
+                    else:
+                        ileUjetychWejsc[1] += 1
+                        sumyTrafien[1] += 1
 
             # szukamy cechy z największą ilością trafień
-            max = 0
-            for n in range(1, len(ileTrafienCech)):
-                if ileTrafienCech[n] > ileTrafienCech[max]:
-                    max = n
-            gini = 1 - (ileTrafienCech[max] / ileUjetychWejsc)
+            #gini = 1 - (ileTrafienCech[max] / ileUjetychWejsc)
+            gini = 1
+            giniPrawdziwe = 1
+            giniFalszywe =1
+            for n in ileTrafienCech:
+                giniPrawdziwe -= math.pow(n[0] / ileUjetychWejsc[0], 2)
+                if ileUjetychWejsc[1] > 0:
+                    giniFalszywe -= math.pow((n[1] - n[0]) / ileUjetychWejsc[1], 2)
+                else:
+                    giniFalszywe = 1
+            gini = ((giniPrawdziwe * sumyTrafien[0]) + (giniFalszywe * sumyTrafien[1])) / (ileUjetychWejsc[0] + ileUjetychWejsc[1])
             if gini <= minGini:
+                max = 0
+                for n in range(1, len(ileTrafienCech)):
+                    if ileTrafienCech[n][0] / ileUjetychWejsc[0] > ileTrafienCech[max][0] / ileUjetychWejsc[0]:
+                        max = n
                 minGini = gini
                 minIndeksTymczasowyWejscia = obecnaKolumna[3]
                 minKtoraWartoscWejscia = obecnaKtoraWartosc
@@ -57,10 +75,12 @@ def budowaDrzewa(wejscie, wyjscie, wartosci, ktoreWejscia, pozostalaWysokosc, un
                 #print(max)
                 if gini == 0:
                     break
+
             if minGini == 0:
                 break
-        #if minGini == 0:
-            #break
+        #print(minCecha)
+        if minGini == 0:
+            break
 
     # po sprawdzeniu możemy wreszcie stworzyć gałąź drzewa z najlepszą wartością
     rezultat = Drzewo()
@@ -163,11 +183,25 @@ def runDTF(wejscie, wyniki, cechyNaDrzewo, maxWysokoscDrzewa):
 
     print("Budowanie drzew...")
 
-    tablicaDrzew = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [9, 10]]
+
+    tablicaDrzew = []
+    #tablicaDrzew = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [9, 10], [2, 4, 5], [6, 8, 3], [1, 8, 9], [2, 6, 9]]
+    #tablicaDrzew = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [9, 10]]
+
+    # kombinacje bez powtorzen here
+
+
 
     #drzewo = budowaDrzewa(wejscie, wynikiNowe, wartosciWejsc, [[8, 0, len(wartosciWejsc[8]), 0],
     #                      [10, 0, len(wartosciWejsc[10]), 1]],
     #                      1, len(cechyWgIndeksow))
+
+    tablicaDrzew = [[0, 1, 2], [0, 1, 3], [0, 1, 4], [0, 1, 5], [0, 1, 6], [0, 1, 7], [0, 1, 8], [0, 1, 9], [0, 1, 10],
+                    [0, 2, 3], [0, 2, 4], [0, 2, 5], [0, 2, 6], [0, 2, 7], [0, 2, 8], [0, 2, 9], [0, 2, 10], [0, 3, 4],
+                    [0, 3, 5], [0, 3, 6], [0, 3, 7], [0, 3, 8], [0, 3, 9], [0, 3, 10], [0, 4, 5], [0, 4, 6], [0, 4, 7],
+                    [0, 4, 8], [0, 4, 9], [0, 4, 10], [0, 5, 6], [0, 5, 7], [0, 5, 8], [0, 5, 9], [0, 5, 10], [0, 6, 7],
+                    [0, 6, 8], [0, 6, 9], [0, 6, 10], [0, 7, 8], [0, 7, 9], [0, 7, 10], [0, 8, 9], [0, 8, 10], [0, 9, 10]]
+
 
     drzewa  = [None for n in range(len(tablicaDrzew))]
     for n in range(len(tablicaDrzew)):
@@ -175,7 +209,7 @@ def runDTF(wejscie, wyniki, cechyNaDrzewo, maxWysokoscDrzewa):
         wejscia = []
         for m in range(len(tablicaDrzew[n])):
             wejscia.append([tablicaDrzew[n][m], 0, len(wartosciWejsc[tablicaDrzew[n][m]]), m])
-        drzewa[n] = budowaDrzewa(wejscie, wynikiNowe, wartosciWejsc, wejscia, 2, len(cechyWgIndeksow))
+        drzewa[n] = budowaDrzewa(wejscie, wynikiNowe, wartosciWejsc, wejscia, maxWysokoscDrzewa, len(cechyWgIndeksow))
 
     print("Sprawdzanie celności wyjścia...")
 
@@ -187,7 +221,41 @@ def runDTF(wejscie, wyniki, cechyNaDrzewo, maxWysokoscDrzewa):
             wynikiDrzew[m].append(wynikZDrzewa(drzewa[m], wejscie[n]))
 
 
+
     #print("Celność wytrenowanego drzewa to: ", trafione / len(wejscie) * 100, "%")
 
+    # wybieranie najpopularniejszych wyników
+    wynikiWiekszosci = []
+    for n in range(len(wyniki)):
+        # pierwsze sprawdzamy które opcje są najpopularniejsze
+        wybrane = [0 for n in range(len(cechyWgIndeksow))]
+        for m in range(len(drzewa)):
+            wybrane[wynikiDrzew[m][n]] += 1
 
+        # szukanie wyników z największą ilością
+        opcje = []
+        for n in range(len(wybrane)):
+            if len(opcje) == 0:
+                opcje.append([n, wybrane[n]])
+            else:
+                if opcje[0][1] < wybrane[n]:
+                    opcje.clear()
+                    opcje.append([n, wybrane[n]])
+                elif opcje[0][1] == wybrane[n]:
+                    opcje.append([n, wybrane[n]])
+        # losowanie wyniku z opcji jeżeli drzewa nie były jednomyślne
+        wynikiWiekszosci.append(cechyWgIndeksow[opcje[random.randint(0, len(opcje) - 1)][0]])
+
+    wynikiSuma = [0 for n in range(len(wynikiDrzew))]
+    wynikKonsensusu = 0
+    for n in range(len(wynikiDrzew)):
+        for m in range(len(wynikiDrzew[n])):
+            if cechyWgIndeksow[wynikiDrzew[n][m]] == wyniki[m]:
+                wynikiSuma[n] += 1
+    for n in range(len(wyniki)):
+        if wynikiWiekszosci[n] == wyniki[n]:
+            wynikKonsensusu += 1
+    for n in range(len(wynikiSuma)):
+        print("Celność wytrenowanego nr: ", n + 1, " drzewa to: ", wynikiSuma[n] / len(wejscie) * 100, "%")
+    print("Celność lasu drzew wg większości + losowanie przy wielu to: ", wynikKonsensusu / len(wejscie) * 100, "%")
     print("koniec breakpoint")

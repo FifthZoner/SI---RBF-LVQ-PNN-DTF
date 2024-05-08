@@ -77,7 +77,7 @@ from LVQ import runLVQ
 #runLVQ(inputWhite.copy(), outputWhite.copy())
 #runLVQ(inputBoth.copy(), outputColors.copy())
 from RBF import runRBF
-#runRBF(inputRed.copy(), outputRed.copy(), 300, 6, 0.001, 0.5)
+runRBF(inputRed.copy(), outputRed.copy(), 300, 6, 0.001, 0.5)
 #runRBF(inputWhite.copy(), outputWhite.copy(), 1000, 3, 0.001, 0.5)
 #runRBF(inputBoth.copy(), outputColors.copy(), 250, 10, 0.001, 0.5)
 from PNN import runPNN
@@ -85,4 +85,10 @@ from PNN import runPNN
 #runPNN(inputWhite.copy(), outputWhite.copy(), 0.5)
 #runPNN(inputBoth.copy(), outputColors.copy(), 0.5)
 from DTF import runDTF
-runDTF(inputRed.copy(), outputRed.copy(), 2, 10)
+# więcej max gałęzi przy większej ilości cech?
+# przy tych danych więcej gałęzi != większa szansa na trafienie
+# 3 prawdopodobnie optymalne dla 4 i możliwe że w ogóle
+# więcej cech nie oznacza większej celności,
+# warto sprawdzić które kombinacje dają największą celność i wrzucić je jako jedyne
+#runDTF(inputRed.copy(), outputRed.copy(), 3, 3)
+#runDTF(inputBoth.copy(), outputColors.copy(), 2, 4)
