@@ -75,9 +75,9 @@ print("częstości: ", temp)
 from LVQ import runLVQ
 #runLVQ(inputRed.copy(), outputRed.copy())
 #runLVQ(inputWhite.copy(), outputWhite.copy())
-#runLVQ(inputBoth.copy(), outputColors.copy())
+runLVQ(inputBoth.copy(), outputColors.copy())
 from RBF import runRBF
-runRBF(inputRed.copy(), outputRed.copy(), 300, 6, 0.001, 0.5)
+#runRBF(inputRed.copy(), outputRed.copy(), 300, 6, 0.001, 0.5)
 #runRBF(inputWhite.copy(), outputWhite.copy(), 1000, 3, 0.001, 0.5)
 #runRBF(inputBoth.copy(), outputColors.copy(), 250, 10, 0.001, 0.5)
 from PNN import runPNN
