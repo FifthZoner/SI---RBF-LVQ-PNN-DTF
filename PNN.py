@@ -16,7 +16,7 @@ class neuron2:
 
 # przekazywać 0 : 1, numery w klasach
 # funkcja ogólna
-def runPNN(wejscie, wyniki, beta):
+def runPNN(wejscie, wyniki, beta, wejscieKontrolne, wyjscieKontrolne):
 
     # szukanie cech występujących w danych
     opcje = {}
@@ -41,11 +41,11 @@ def runPNN(wejscie, wyniki, beta):
     # przeprowadzenie obliczeń
     liczbaTrafionych = 0
 
-    for wiersz in range(len(wejscie)):
+    for wiersz in range(len(wejscieKontrolne)):
 
         # obliczenie wartości aktywacji dla każdego neuronu dla podanej wartości
         for neuron in neurony2:
-            aktywacjaPNN(neuron, wejscie[wiersz])
+            aktywacjaPNN(neuron, wejscieKontrolne[wiersz])
 
         # wyliczanie średnich       TODO: suma czy średnia? raczej średnia
         sumy = [0 for n in range(len(cechy))]
@@ -61,11 +61,11 @@ def runPNN(wejscie, wyniki, beta):
         for n in range(1, len(srednie)):
             if srednie[n] > srednie[max]:
                 max = n
-        if cechy[max] == wyniki[wiersz]:
+        if cechy[max] == wyjscieKontrolne[wiersz]:
             liczbaTrafionych += 1
 
 
 
 
 
-    print("Poprawność: ", liczbaTrafionych, " / ", len(wejscie), " ( ", liczbaTrafionych / len(wejscie) * 100, "% )")
+    print("Trafność na danych kontrolnych: ", liczbaTrafionych, " / ", len(wejscieKontrolne), " ( ", liczbaTrafionych / len(wejscieKontrolne) * 100, "% )")

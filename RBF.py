@@ -11,7 +11,7 @@ def aktywacjaRBF(prototyp, dane, beta):
 
 # przekazywać 0 : 1, numery w klasach
 # funkcja ogólna
-def runRBF(wejscie, wyniki, liczbaEpok, neuronyNaKlase, alfa, beta):
+def runRBF(wejscie, wyniki, liczbaEpok, neuronyNaKlase, alfa, beta, wejscieKontrolne, wyjscieKontrolne):
     # inne zmienne kontrolne
     celnosc = []
 
@@ -84,3 +84,24 @@ def runRBF(wejscie, wyniki, liczbaEpok, neuronyNaKlase, alfa, beta):
     plt.ylabel("Procent poprawnie zaklasyfikowanych")
     plt.xlabel("Numer epoki")
     plt.show()
+
+    liczbaTrafionych = 0
+    for wiersz in range(0, len(wejscieKontrolne)):
+        aktywacje = [[] for n in range(len(wagi))]
+        for cecha in range(0, len(wagi)):
+            for waga in range(0, len(wagi[cecha])):
+                aktywacje[cecha].append(aktywacjaRBF(wagi[cecha][waga], wejscieKontrolne[wiersz], bety[cecha][waga]))
+
+        # TODO: gradient prosty? (gradient descent)
+
+        # sprawdzanie i zapisywanie która jest największa
+        ktory = [0, 0]
+        for cecha in range(0, len(aktywacje)):
+            for waga in range(0, len(aktywacje[cecha])):
+                if aktywacje[cecha][waga] > aktywacje[ktory[0]][ktory[1]]:
+                    ktory = [cecha, waga]
+
+        # modyfikacja modelu
+        if wyjscieKontrolne[wiersz] == opcjeTab[ktory[0]]:
+            liczbaTrafionych += 1
+    print("Trafność na danych kontrolnych: ", liczbaTrafionych, " / ", len(wejscieKontrolne), " ( ", liczbaTrafionych / len(wejscieKontrolne) * 100, "% )")
