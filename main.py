@@ -99,9 +99,9 @@ from LVQ import runLVQ
 #runLVQ(inputWhiteT.copy(), outputWhiteT.copy(), 200, 0.001, inputWhiteK.copy(), outputWhiteK.copy())
 #runLVQ(inputBothT.copy(), outputColorsT.copy(), 100, 0.001, inputBothK.copy(), outputColorsK.copy())
 from RBF import runRBF
-#runRBF(inputRedT.copy(), outputRedT.copy(), 50, 6, 0.001, 0.5, inputRedK.copy(), outputRedK.copy())
+runRBF(inputRedT.copy(), outputRedT.copy(), 500, 20, 0.0002, 10, inputRedK.copy(), outputRedK.copy())
 #runRBF(inputWhiteT.copy(), outputWhiteT.copy(), 1000, 3, 0.001, 0.5, inputWhiteK.copy(), outputWhiteK.copy())
-#runRBF(inputBothT.copy(), outputColorsT.copy(), 250, 10, 0.001, 0.5, inputBothK.copy(), outputColorsK.copy())
+#runRBF(inputBothT.copy(), outputColorsT.copy(), 300, 10, 0.0005, 100, inputBothK.copy(), outputColorsK.copy())
 from PNN import runPNN
 #runPNN(inputRedT.copy(), outputRedT.copy(), 0.5, inputRedK.copy(), outputRedK.copy())
 #runPNN(inputWhiteT.copy(), outputWhiteT.copy(), 0.5, inputWhiteK.copy(), outputWhiteK.copy())
@@ -112,9 +112,10 @@ from DTF import runDTF
 # 3 prawdopodobnie optymalne dla 4 i możliwe że w ogóle
 # więcej cech nie oznacza większej celności,
 # warto sprawdzić które kombinacje dają największą celność i wrzucić je jako jedyne
-drzewa = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9], [9, 10]]
+#drzewa = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9], [9, 10]]
+drzewa = [[6, 7], [7, 8], [6, 7, 8], [6, 8]]
 #drzewa = [[0, 1, 2, 3, 4, 5], [6, 7, 8, 9, 10]]
 #drzewa = [[10]]
 #runDTF(inputRedT.copy(), outputRedT.copy(), drzewa, 3, inputRedK.copy(), outputRedK.copy())
 #runDTF(inputWhiteT.copy(), outputWhiteT.copy(), drzewa, 3, inputWhiteK.copy(), outputWhiteK.copy())
-runDTF(inputBothT.copy(), outputColorsT.copy(), drzewa, 3, inputBothK.copy(), outputColorsK.copy())
+#runDTF(inputBothT.copy(), outputColorsT.copy(), drzewa, 3, inputBothK.copy(), outputColorsK.copy())

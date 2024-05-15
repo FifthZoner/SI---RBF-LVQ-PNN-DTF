@@ -77,3 +77,4 @@ def runLVQ(wejscie, wyniki, liczbaEpok, alfa, wejscieKontrolne, wyjscieKontrolne
         if indeksyNaCechy[wygrany] == wyjscieKontrolne[wiersz]:
             liczbaTrafionych += 1
     print("Trafność na danych kontrolnych: ", liczbaTrafionych, " / ", len(wejscieKontrolne), " ( ", liczbaTrafionych / len(wejscieKontrolne) * 100, "% )")
+    return celnosc
