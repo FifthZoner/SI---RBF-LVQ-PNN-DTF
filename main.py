@@ -1,6 +1,12 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import random
+import numpy as np
+from matplotlib.collections import PolyCollection
+import math
+import string
+from LVQ import runLVQ
+from RBF import runRBF
 
 random.seed(a=None, version=2)
 
@@ -86,20 +92,39 @@ inputWhiteT, outputWhiteT, inputWhiteK, outputWhiteK = temp[0], temp[1], temp[2]
 temp = naTreningoweIKontrolne(inputBoth, outputColors, 0.1)
 inputBothT, outputColorsT, inputBothK, outputColorsK = temp[0], temp[1], temp[2], temp[3]
 
-#temp = {}
-#for n in outputWhite:
+temp = {}
+for n in outputWhite:
+    temp[n] = 0
+#for n in outputRed:
 #    temp[n] = 0
-#for n in outputWhite:
-#    temp[n] += 1
-#print("częstości: ", temp)
+for n in outputWhite:
+    temp[n] += 1
+#for n in outputRed:
+    #temp[n] += 1
+print("częstości: ", temp)
 
 # Radialna, LVQ, PNN, DTF
-from LVQ import runLVQ
-#runLVQ(inputRedT.copy(), outputRedT.copy(), 200, 0.001, inputRedK.copy(), outputRedK.copy())
+wyniki = []
+#alfy = [0.00025, 0.001,  0.0025, 0.005, 0.01]
+alfy = [0.00005, 0.0001, 0.0005,  0.001]
+bety = [0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]
+ilosciNeuronow = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+iloscEpok = 2000
+
+
+# badanie alfy
+for alfa in alfy:
+    #wyniki.append(runLVQ(inputRedT.copy(), outputRedT.copy(), iloscEpok, alfa, inputRedK.copy(), outputRedK.copy()))
+    #wyniki.append(runLVQ(inputWhiteT.copy(), outputWhiteT.copy(), iloscEpok, alfa, inputWhiteK.copy(), outputWhiteK.copy()))
+    wyniki.append(runRBF(inputRedT.copy(), outputRedT.copy(), iloscEpok, 5, alfa, 5, inputRedK.copy(), outputRedK.copy()))
+
+
+
+#runLVQ(inputRedT.copy(), outputRedT.copy(), 100, 0.025, inputRedK.copy(), outputRedK.copy())
 #runLVQ(inputWhiteT.copy(), outputWhiteT.copy(), 200, 0.001, inputWhiteK.copy(), outputWhiteK.copy())
 #runLVQ(inputBothT.copy(), outputColorsT.copy(), 100, 0.001, inputBothK.copy(), outputColorsK.copy())
-from RBF import runRBF
-runRBF(inputRedT.copy(), outputRedT.copy(), 500, 20, 0.0002, 10, inputRedK.copy(), outputRedK.copy())
+
+#runRBF(inputRedT.copy(), outputRedT.copy(), 500, 20, 0.0002, 10, inputRedK.copy(), outputRedK.copy())
 #runRBF(inputWhiteT.copy(), outputWhiteT.copy(), 1000, 3, 0.001, 0.5, inputWhiteK.copy(), outputWhiteK.copy())
 #runRBF(inputBothT.copy(), outputColorsT.copy(), 300, 10, 0.0005, 100, inputBothK.copy(), outputColorsK.copy())
 from PNN import runPNN
@@ -119,3 +144,35 @@ drzewa = [[6, 7], [7, 8], [6, 7, 8], [6, 8]]
 #runDTF(inputRedT.copy(), outputRedT.copy(), drzewa, 3, inputRedK.copy(), outputRedK.copy())
 #runDTF(inputWhiteT.copy(), outputWhiteT.copy(), drzewa, 3, inputWhiteK.copy(), outputWhiteK.copy())
 #runDTF(inputBothT.copy(), outputColorsT.copy(), drzewa, 3, inputBothK.copy(), outputColorsK.copy())
+
+
+def polygon_under_graph(x, y):
+    """
+    Construct the vertex list which defines the polygon filling the space under
+    the (x, y) line graph. This assumes x is in ascending order.
+    """
+    temp2 = np.array([wyniki[y][m] for m in range(len(wyniki[y]))])
+    return [(x[0], 0.), *zip(x, temp2), (x[-1], 0.)]
+    # return [np.float_power(2.71828, -y * np.float_power(x, 2)), 0, 0]
+
+
+ax = plt.figure().add_subplot(projection='3d')
+x = np.linspace(1, iloscEpok + 1, iloscEpok)
+# wybór analizy
+lambdas = range(len(alfy))
+
+# verts[i] is a list of (x, y) pairs defining polygon i.
+gamma = np.vectorize(math.gamma)
+verts = [polygon_under_graph(x, l)
+         for l in lambdas]
+facecolors = plt.colormaps['jet'](np.linspace(0, 1, len(verts)))
+
+poly = PolyCollection(verts, facecolors=facecolors, alpha=.95)
+stringizowany = []
+# wybór zbioru do y
+ax.add_collection3d(poly, zs=alfy, zdir='y')
+ax.view_init(15, -75, 0)
+# wybór wykresu
+ax.set(xlim=(x[0], x[-1]), ylim=(alfy[0], alfy[-1]), zlim=(0, 1), xlabel='Epoka', ylabel='Wartość alfa', zlabel='Zgodność z danymi treningowymi')
+
+plt.show()

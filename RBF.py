@@ -181,4 +181,6 @@ def runRBF(wejscie, wyniki, liczbaEpok, neuronyNaKlase, alfa, beta, wejscieKontr
         if wyjscieKontrolne[wiersz] == opcjeTab[ktory[0]]:
             liczbaTrafionych += 1
     print("Trafność na danych kontrolnych: ", liczbaTrafionych, " / ", len(wejscieKontrolne), " ( ", liczbaTrafionych / len(wejscieKontrolne) * 100, "% )")
+    for n in range(len(celnosc)):
+        celnosc[n] /= 100
     return celnosc

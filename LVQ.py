@@ -39,6 +39,8 @@ def runLVQ(wejscie, wyniki, liczbaEpok, alfa, wejscieKontrolne, wyjscieKontrolne
             dystanse = [0 for n in range(len(indeksyNaCechy))]
             for kolumna in range(0, len(wejscie[wiersz])):
                 for n in range(0, len(wagi)):
+                    #k = wejscie[wiersz][kolumna]
+                    #k2 = wagi[n][kolumna]
                     dystanse[n] += math.pow(wejscie[wiersz][kolumna] - wagi[n][kolumna], 2)
             wygrany = 0
             for n in range(1, len(dystanse)):
@@ -77,4 +79,6 @@ def runLVQ(wejscie, wyniki, liczbaEpok, alfa, wejscieKontrolne, wyjscieKontrolne
         if indeksyNaCechy[wygrany] == wyjscieKontrolne[wiersz]:
             liczbaTrafionych += 1
     print("Trafność na danych kontrolnych: ", liczbaTrafionych, " / ", len(wejscieKontrolne), " ( ", liczbaTrafionych / len(wejscieKontrolne) * 100, "% )")
+    for n in range(len(celnosc)):
+        celnosc[n] /= 100
     return celnosc
