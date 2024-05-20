@@ -106,16 +106,16 @@ print("częstości: ", temp)
 # Radialna, LVQ, PNN, DTF
 wyniki = []
 #alfy = [0.00025, 0.001,  0.0025, 0.005, 0.01]
-alfy = [0.00005, 0.0001, 0.0005,  0.001]
+alfy = [0.000001, 0.00001, 0.0001,  0.001]
 bety = [0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]
 ilosciNeuronow = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-iloscEpok = 5
+iloscEpok = 1000
 
 
 # badanie alfy
 for alfa in alfy:
-    wyniki.append(runLVQ(inputRedT.copy(), outputRedT.copy(), iloscEpok, alfa, inputRedK.copy(), outputRedK.copy()))
-    #wyniki.append(runLVQ(inputWhiteT.copy(), outputWhiteT.copy(), iloscEpok, alfa, inputWhiteK.copy(), outputWhiteK.copy()))
+    #wyniki.append(runLVQ(inputRedT.copy(), outputRedT.copy(), iloscEpok, alfa, inputRedK.copy(), outputRedK.copy()))
+    wyniki.append(runLVQ(inputWhiteT.copy(), outputWhiteT.copy(), iloscEpok, alfa, inputWhiteK.copy(), outputWhiteK.copy()))
     #wyniki.append(runRBF(inputRedT.copy(), outputRedT.copy(), iloscEpok, 5, alfa, 5, inputRedK.copy(), outputRedK.copy()))
 
 
@@ -169,14 +169,15 @@ poly = PolyCollection(verts, facecolors=facecolors, alpha=.95)
 ax.add_collection3d(poly, zs=y_values, zdir='y')
 ax.view_init(15, -75, 0)
 
-ax.set(xlim=(x[0], x[-1]), ylim=(alfy[0], alfy[-1]), zlim=(0, 1), xlabel='Epoka', zlabel='Wsp. trafień')
+ax.set(xlim=(x[0], x[-1]), ylim=(alfy[0], alfy[-1]), zlim=(0, 1), xlabel='Epoka', zlabel='Wsp. trafień', ylabel='Wsp. uczenia')
 
 # Remove y-axis tick labels
 ax.set_yticks([])
 
 # Add text labels for the y-axis on the left
 for i, y in enumerate(y_values):
-    ax.text(6.1, y, -0.1, "{:.{}e}".format(alfy[i], 2), va='center', ha='right')
+    #ax.text(6.1, y, -0.1, "{:.{}e}".format(alfy[i], 2), va='center', ha='right')
+    ax.text(1.29 * iloscEpok, y, -0.1, "{:.{}e}".format(alfy[i], 0), va='center', ha='right')
 
 plt.show()
 
