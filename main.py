@@ -109,24 +109,24 @@ wyniki = []
 alfy = [0.00005, 0.0001, 0.0005,  0.001]
 bety = [0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]
 ilosciNeuronow = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-iloscEpok = 2000
+iloscEpok = 5
 
 
 # badanie alfy
 for alfa in alfy:
-    #wyniki.append(runLVQ(inputRedT.copy(), outputRedT.copy(), iloscEpok, alfa, inputRedK.copy(), outputRedK.copy()))
+    wyniki.append(runLVQ(inputRedT.copy(), outputRedT.copy(), iloscEpok, alfa, inputRedK.copy(), outputRedK.copy()))
     #wyniki.append(runLVQ(inputWhiteT.copy(), outputWhiteT.copy(), iloscEpok, alfa, inputWhiteK.copy(), outputWhiteK.copy()))
-    wyniki.append(runRBF(inputRedT.copy(), outputRedT.copy(), iloscEpok, 5, alfa, 5, inputRedK.copy(), outputRedK.copy()))
+    #wyniki.append(runRBF(inputRedT.copy(), outputRedT.copy(), iloscEpok, 5, alfa, 5, inputRedK.copy(), outputRedK.copy()))
 
 
 
-#runLVQ(inputRedT.copy(), outputRedT.copy(), 100, 0.025, inputRedK.copy(), outputRedK.copy())
+#runLVQ(inputRedT.copy(), outputRedT.copy(), 10000, 0.00001, inputRedK.copy(), outputRedK.copy())
 #runLVQ(inputWhiteT.copy(), outputWhiteT.copy(), 200, 0.001, inputWhiteK.copy(), outputWhiteK.copy())
 #runLVQ(inputBothT.copy(), outputColorsT.copy(), 100, 0.001, inputBothK.copy(), outputColorsK.copy())
 
 #runRBF(inputRedT.copy(), outputRedT.copy(), 500, 20, 0.0002, 10, inputRedK.copy(), outputRedK.copy())
 #runRBF(inputWhiteT.copy(), outputWhiteT.copy(), 1000, 3, 0.001, 0.5, inputWhiteK.copy(), outputWhiteK.copy())
-#runRBF(inputBothT.copy(), outputColorsT.copy(), 300, 10, 0.0005, 100, inputBothK.copy(), outputColorsK.copy())
+#runRBF(inputBothT.copy(), outputColorsT.copy(), 200, 6, 0.005, 100, inputBothK.copy(), outputColorsK.copy())
 from PNN import runPNN
 #runPNN(inputRedT.copy(), outputRedT.copy(), 0.5, inputRedK.copy(), outputRedK.copy())
 #runPNN(inputWhiteT.copy(), outputWhiteT.copy(), 0.5, inputWhiteK.copy(), outputWhiteK.copy())
@@ -137,8 +137,8 @@ from DTF import runDTF
 # 3 prawdopodobnie optymalne dla 4 i możliwe że w ogóle
 # więcej cech nie oznacza większej celności,
 # warto sprawdzić które kombinacje dają największą celność i wrzucić je jako jedyne
-#drzewa = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9], [9, 10]]
-drzewa = [[6, 7], [7, 8], [6, 7, 8], [6, 8]]
+drzewa = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9], [9, 10]]
+#drzewa = [[6, 7], [7, 8], [6, 7, 8], [6, 8]]
 #drzewa = [[0, 1, 2, 3, 4, 5], [6, 7, 8, 9, 10]]
 #drzewa = [[10]]
 #runDTF(inputRedT.copy(), outputRedT.copy(), drzewa, 3, inputRedK.copy(), outputRedK.copy())
@@ -153,26 +153,30 @@ def polygon_under_graph(x, y):
     """
     temp2 = np.array([wyniki[y][m] for m in range(len(wyniki[y]))])
     return [(x[0], 0.), *zip(x, temp2), (x[-1], 0.)]
-    # return [np.float_power(2.71828, -y * np.float_power(x, 2)), 0, 0]
-
 
 ax = plt.figure().add_subplot(projection='3d')
-x = np.linspace(1, iloscEpok + 1, iloscEpok)
-# wybór analizy
-lambdas = range(len(alfy))
+x = np.linspace(1, iloscEpok, iloscEpok)
 
 # verts[i] is a list of (x, y) pairs defining polygon i.
 gamma = np.vectorize(math.gamma)
-verts = [polygon_under_graph(x, l)
-         for l in lambdas]
+verts = [polygon_under_graph(x, l) for l in range(len(alfy))]
 facecolors = plt.colormaps['jet'](np.linspace(0, 1, len(verts)))
 
+# Create evenly spaced y-values
+y_values = np.linspace(alfy[0], alfy[-1], len(alfy))
+
 poly = PolyCollection(verts, facecolors=facecolors, alpha=.95)
-stringizowany = []
-# wybór zbioru do y
-ax.add_collection3d(poly, zs=alfy, zdir='y')
+ax.add_collection3d(poly, zs=y_values, zdir='y')
 ax.view_init(15, -75, 0)
-# wybór wykresu
-ax.set(xlim=(x[0], x[-1]), ylim=(alfy[0], alfy[-1]), zlim=(0, 1), xlabel='Epoka', ylabel='Wartość alfa', zlabel='Zgodność z danymi treningowymi')
+
+ax.set(xlim=(x[0], x[-1]), ylim=(alfy[0], alfy[-1]), zlim=(0, 1), xlabel='Epoka', zlabel='Wsp. trafień')
+
+# Remove y-axis tick labels
+ax.set_yticks([])
+
+# Add text labels for the y-axis on the left
+for i, y in enumerate(y_values):
+    ax.text(6.1, y, -0.1, "{:.{}e}".format(alfy[i], 2), va='center', ha='right')
 
 plt.show()
+

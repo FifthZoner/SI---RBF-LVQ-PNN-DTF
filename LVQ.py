@@ -60,10 +60,10 @@ def runLVQ(wejscie, wyniki, liczbaEpok, alfa, wejscieKontrolne, wyjscieKontrolne
         celnosc.append(liczbaTrafionych / len(wejscie) * 100)
 
     # wyswietlanie wyników
-    plt.plot(celnosc)
-    plt.ylabel("Procent poprawnie zaklasyfikowanych")
-    plt.xlabel("Numer epoki")
-    plt.show()
+    #plt.plot(celnosc)
+    #plt.ylabel("Procent poprawnie zaklasyfikowanych")
+    #plt.xlabel("Numer epoki")
+    #plt.show()
 
     # sprawdzanie z danymi kontrolnymi
     liczbaTrafionych = 0
