@@ -88,7 +88,7 @@ plt.ylabel("Wartości znormalizowane dla białego")
 plt.show()
 
 # rozdzielanie na treningowe i kontrolne
-temp = naTreningoweIKontrolne(inputRed, outputRed, 0.2)
+temp = naTreningoweIKontrolne(inputRed, outputRed, 0.1)
 inputRedT, outputRedT, inputRedK, outputRedK = temp[0], temp[1], temp[2], temp[3]
 temp = naTreningoweIKontrolne(inputWhite, outputWhite, 0.1)
 inputWhiteT, outputWhiteT, inputWhiteK, outputWhiteK = temp[0], temp[1], temp[2], temp[3]
@@ -111,10 +111,13 @@ print("częstości: ", temp)
 # RBF, LVQ, PNN, DTF
 wyniki = []
 kolumny = []
+kolumnyDrzew = []
 #alfy = [0.00025, 0.001,  0.0025, 0.005, 0.01]
 alfy = [0.000001, 0.00001, 0.0001,  0.001]
 bety = [0.001, 0.01, 0.1, 1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 100000000, 1000000000, 10000000000, 100000000000]
 ilosciNeuronow = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+#iloscigalezi = [1, 2, 3, 4, 5, 6]
+iloscigalezi = [1, 2, 3, 4, 5]
 iloscEpok = 1500
 
 
@@ -125,9 +128,9 @@ iloscEpok = 1500
     #wyniki.append(runRBF(inputRedT.copy(), outputRedT.copy(), iloscEpok, 5, alfa, 5, inputRedK.copy(), outputRedK.copy()))
 
 # badanie bety
-for beta in bety:
+#for beta in bety:
     #kolumny.append(runPNN(inputRedT.copy(), outputRedT.copy(), beta, inputRedK.copy(), outputRedK.copy()))
-    kolumny.append(runPNN(inputWhiteT.copy(), outputWhiteT.copy(), beta, inputWhiteK.copy(), outputWhiteK.copy()))
+    #kolumny.append(runPNN(inputWhiteT.copy(), outputWhiteT.copy(), beta, inputWhiteK.copy(), outputWhiteK.copy()))
     #kolumny.append(runPNN(inputBothT.copy(), outputBothT.copy(), beta, inputBothK.copy(), outputBothK.copy()))
 
 #runLVQ(inputRedT.copy(), outputRedT.copy(), 10000, 0.00001, inputRedK.copy(), outputRedK.copy())
@@ -146,11 +149,20 @@ for beta in bety:
 # 3 prawdopodobnie optymalne dla 4 i możliwe że w ogóle
 # więcej cech nie oznacza większej celności,
 # warto sprawdzić które kombinacje dają największą celność i wrzucić je jako jedyne
-drzewa = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9], [9, 10]]
+drzewa = []
+for x1 in range(0, 11):
+    for x2 in range(x1 + 1, 11):
+        drzewa.append([x1, x2])
+#print(drzewa)
+#drzewa = [[0, 1], [0, 2], [0, 3], [0, 4], [0,5], [0,6], [0,7], [0,8], [0,9], [0, 10]]
+#drzewa = [[4, 5], [6, 7], [9, 10]]
 #drzewa = [[6, 7], [7, 8], [6, 7, 8], [6, 8]]
-#drzewa = [[0, 1, 2, 3, 4, 5], [6, 7, 8, 9, 10]]
+#drzewa = [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]]
+#drzewa = [[0, 2, 7, 8, 9, 10]]
 #drzewa = [[10]]
-#runDTF(inputRedT.copy(), outputRedT.copy(), drzewa, 3, inputRedK.copy(), outputRedK.copy())
+for ilosc in iloscigalezi:
+    kolumnyDrzew.append(runDTF(inputRedT.copy(), outputRedT.copy(), drzewa, ilosc, inputRedK.copy(), outputRedK.copy()))
+#runDTF(inputRedT.copy(), outputRedT.copy(), drzewa, 8, inputRedK.copy(), outputRedK.copy())
 #runDTF(inputWhiteT.copy(), outputWhiteT.copy(), drzewa, 3, inputWhiteK.copy(), outputWhiteK.copy())
 #runDTF(inputBothT.copy(), outputColorsT.copy(), drzewa, 3, inputBothK.copy(), outputColorsK.copy())
 if len(kolumny) != 0:
@@ -163,15 +175,24 @@ if len(kolumny) != 0:
     plt.bar(x_pos, kolumny, color='maroon', width=0.4)
     labels = []
     for n in bety:
-        # ax.text(6.1, y, -0.1, "{:.{}e}".format(alfy[i], 2), va='center', ha='right')
-        # czerwony
-        # ax.text(1.29 * iloscEpok, y, -0.1, "{:.{}e}".format(alfy[i], 0), va='center', ha='right')
-        # biały
         labels.append("{:.{}e}".format(n, 0))
     # Set the x-axis tick labels
     plt.xticks(x_pos, labels)
 
     plt.xlabel("wsp. beta")
+    plt.ylabel("Celność")
+    plt.show()
+
+if len(kolumnyDrzew) != 0:
+    fig = plt.figure(figsize=(10, 5))    # Create evenly spaced x-axis values
+    x_pos = np.arange(len(iloscigalezi))    # Create the bar plot with evenly spaced x-axis
+    plt.bar(x_pos, kolumnyDrzew, color='maroon', width=0.4)
+    labels = []
+    for n in iloscigalezi:
+        labels.append(str(n))
+    # Set the x-axis tick labels
+    plt.xticks(x_pos, labels)
+    plt.xlabel("maksymalna ilość gałęzi")
     plt.ylabel("Celność")
     plt.show()
 

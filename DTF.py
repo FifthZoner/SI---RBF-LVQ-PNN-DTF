@@ -9,16 +9,43 @@ class Drzewo:
     nrCechy = 0
     # wartość, dla której dokonujemy porównania, jeżeli jest mniejsza bądź równa to true, jak nie to false
     # przedstawiona jako kolumna i nr wartości rosnąco ze wszystkich wartości
-    wartosc = [0 ,0]
+    wartosc = 0
     # jeżeli obydwie są None to gałąź jest końcowa
     # gałąź przy true
     prawdziwa = None
     # gałąź przy false
     falszywa = None
-    # wartość gini dla gałęzi, jeżeli jest 0 to jest to końcowa
+    # wartość gini dla gałęzi, jeżeli jest 0 to jest to jest super
     gini = 0
 
 def budowaDrzewa(wejscie, wyjscie, wartosci, ktoreWejscia, pozostalaWysokosc, unikalneCechy) -> Drzewo:
+
+    if pozostalaWysokosc == -1:
+        # koniec drzewa,wybieramy najbardziej prawdopodobny przypadek, bez szukanie minimalnych
+        sumyCech = [0 for n in range(unikalneCechy)]
+        suma = 0
+        for wiersz in range(len(wejscie)):
+            czyLiczyc = True
+            for n in ktoreWejscia:
+                if n[1] != n[2] and (wejscie[wiersz][n[0]] < wartosci[n[0]][n[1]] or wejscie[wiersz][n[0]] > wartosci[n[0]][n[2] - 1]):
+                    czyLiczyc = False
+            if czyLiczyc:
+                sumyCech[wyjscie[wiersz]] += 1
+                suma +=1
+        # szukanie najczęstszej
+        max = 0
+        for n in range(1, len(sumyCech)):
+            if sumyCech[n] > sumyCech[max]:
+                max = n
+        gini = 1
+        for n in sumyCech:
+            if suma > 0:
+                gini -= math.pow(n / suma, 2)
+        wynik = Drzewo()
+        wynik.nrCechy = max
+        wynik.gini = gini
+        return wynik
+
     # do zapisywania minimalnych wartości
     minGini = 10
     minIndeksTymczasowyWejscia = 0
@@ -90,7 +117,7 @@ def budowaDrzewa(wejscie, wyjscie, wartosci, ktoreWejscia, pozostalaWysokosc, un
     rezultat.nrWejscia = ktoreWejscia[minIndeksTymczasowyWejscia][0]
 
     # gini to 0, trzeba stworzyć tylko gałąź dla sytuacji fałszywej
-    if minGini == 0 and pozostalaWysokosc > 0:
+    if minGini == 0:
         # dodawanie fałszywej jeżeli jeszcze można
         temp = [x.copy() for x in ktoreWejscia]
         temp[minIndeksTymczasowyWejscia][1] = minKtoraWartoscWejscia + 1
@@ -100,7 +127,7 @@ def budowaDrzewa(wejscie, wyjscie, wartosci, ktoreWejscia, pozostalaWysokosc, un
                 mozna = True
         if mozna:
             rezultat.falszywa = budowaDrzewa(wejscie, wyjscie, wartosci, temp.copy(), pozostalaWysokosc - 1, unikalneCechy)
-    elif pozostalaWysokosc > 0:
+    else:
         # dodawanie obu jeżeli można
         #print("przed ", ktoreWejscia)
         temp = [x.copy() for x in ktoreWejscia]
@@ -127,7 +154,9 @@ def budowaDrzewa(wejscie, wyjscie, wartosci, ktoreWejscia, pozostalaWysokosc, un
 
 # zwraca wynik z gałęzi dla podanego wektora wejściowego
 def wynikZDrzewa(drzewo, wektor):
-    if wektor[drzewo.nrWejscia] <= drzewo.wartosc:
+    if drzewo.prawdziwa == None and drzewo.falszywa == None:
+        return drzewo.nrCechy
+    elif wektor[drzewo.nrWejscia] <= drzewo.wartosc:
         # jeżeli warunek został spełniony
         if drzewo.prawdziwa != None:
             # jeżeli jest dalsza gałąź zwróć wartość z jej sprawdzenia
@@ -139,6 +168,7 @@ def wynikZDrzewa(drzewo, wektor):
             # jeżeli jest dalsza gałąź zwróć wartość z jej sprawdzenia
             return wynikZDrzewa(drzewo.falszywa, wektor)
         else:
+            print("To nie powinno się stać!")
             return drzewo.nrCechy
 
 
@@ -259,3 +289,4 @@ def runDTF(wejscie, wyniki, tablicaDrzew, maxWysokoscDrzewa, wejscieKontrolne, w
         print("Celność wytrenowanego nr: ", n + 1, " drzewa to: ", wynikiSuma[n] / len(wyjscieKontrolne) * 100, "%")
     print("Celność lasu drzew wg większości + losowanie przy wielu to: ", wynikKonsensusu / len(wyjscieKontrolne) * 100, "%")
     print("koniec breakpoint")
+    return wynikKonsensusu / len(wyjscieKontrolne)
