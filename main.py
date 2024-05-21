@@ -97,27 +97,28 @@ inputBothT, outputBothT, inputBothK, outputBothK = temp[0], temp[1], temp[2], te
 temp = naTreningoweIKontrolne(inputBoth, outputColors, 0.2)
 inputColorsT, outputColorsT, inputColorsK, outputColorsK = temp[0], temp[1], temp[2], temp[3]
 
-temp = {}
-for n in outputWhite:
-    temp[n] = 0
+#temp = {}
+#for n in outputWhite:
+    #temp[n] = 0
 #for n in outputRed:
 #    temp[n] = 0
-for n in outputWhite:
-    temp[n] += 1
+#for n in outputWhite:
+    #temp[n] += 1
 #for n in outputRed:
     #temp[n] += 1
-print("częstości: ", temp)
+#print("częstości: ", temp)
 
 # RBF, LVQ, PNN, DTF
 wyniki = []
 kolumny = []
 kolumnyDrzew = []
 #alfy = [0.00025, 0.001,  0.0025, 0.005, 0.01]
-alfy = [0.000001, 0.00001, 0.0001,  0.001]
-bety = [0.001, 0.01, 0.1, 1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 100000000, 1000000000, 10000000000, 100000000000]
+alfy = [0.0000001, 0.000001, 0.00001, 0.0001,  0.001]
+bety = [0.001, 0.01, 0.1, 1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000]
 ilosciNeuronow = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 #iloscigalezi = [1, 2, 3, 4, 5, 6]
 iloscigalezi = [1, 2, 3, 4, 5]
+#iloscigalezi = [3]
 iloscEpok = 1500
 
 
@@ -125,34 +126,46 @@ iloscEpok = 1500
 #for alfa in alfy:
     #wyniki.append(runLVQ(inputRedT.copy(), outputRedT.copy(), iloscEpok, alfa, inputRedK.copy(), outputRedK.copy()))
     #wyniki.append(runLVQ(inputWhiteT.copy(), outputWhiteT.copy(), iloscEpok, alfa, inputWhiteK.copy(), outputWhiteK.copy()))
+    #wyniki.append(runLVQ(inputColorsT.copy(), outputColorsT.copy(), iloscEpok, alfa, inputColorsK.copy(), outputColorsK.copy()))
     #wyniki.append(runRBF(inputRedT.copy(), outputRedT.copy(), iloscEpok, 5, alfa, 5, inputRedK.copy(), outputRedK.copy()))
+    #wyniki.append(runRBF(inputColorsT.copy(), outputColorsT.copy(), iloscEpok, 5, alfa, 5, inputColorsK.copy(), outputColorsK.copy()))
 
 # badanie bety
-#for beta in bety:
+for beta in bety:
     #kolumny.append(runPNN(inputRedT.copy(), outputRedT.copy(), beta, inputRedK.copy(), outputRedK.copy()))
     #kolumny.append(runPNN(inputWhiteT.copy(), outputWhiteT.copy(), beta, inputWhiteK.copy(), outputWhiteK.copy()))
     #kolumny.append(runPNN(inputBothT.copy(), outputBothT.copy(), beta, inputBothK.copy(), outputBothK.copy()))
+    wyniki.append(runRBF(inputColorsT.copy(), outputColorsT.copy(), iloscEpok, 5, 0.00025, beta, inputColorsK.copy(), outputColorsK.copy()))
 
-#runLVQ(inputRedT.copy(), outputRedT.copy(), 10000, 0.00001, inputRedK.copy(), outputRedK.copy())
-#runLVQ(inputWhiteT.copy(), outputWhiteT.copy(), 200, 0.001, inputWhiteK.copy(), outputWhiteK.copy())
-#runLVQ(inputBothT.copy(), outputColorsT.copy(), 100, 0.001, inputBothK.copy(), outputColorsK.copy())
+#for ilosc in ilosciNeuronow:
+#    wyniki.append(runRBF(inputColorsT.copy(), outputColorsT.copy(), iloscEpok, ilosc, 0.0005, 10, inputColorsK.copy(), outputColorsK.copy()))
+
+#runLVQ(inputRedT.copy(), outputRedT.copy(), 500, 0.0001, inputRedK.copy(), outputRedK.copy())
+#runLVQ(inputWhiteT.copy(), outputWhiteT.copy(), 500, 0.001, inputWhiteK.copy(), outputWhiteK.copy())
+#runLVQ(inputBothT.copy(), outputBothT.copy(), 300, 0.001, inputBothK.copy(), outputBothK.copy())
+#runLVQ(inputColorsT.copy(), outputColorsT.copy(), 100, 0.005, inputColorsK.copy(), outputColorsK.copy())
 
 #runRBF(inputRedT.copy(), outputRedT.copy(), 500, 20, 0.0002, 10, inputRedK.copy(), outputRedK.copy())
-#runRBF(inputWhiteT.copy(), outputWhiteT.copy(), 1000, 3, 0.001, 0.5, inputWhiteK.copy(), outputWhiteK.copy())
-#runRBF(inputBothT.copy(), outputColorsT.copy(), 200, 6, 0.005, 100, inputBothK.copy(), outputColorsK.copy())
+#runRBF(inputWhiteT.copy(), outputWhiteT.copy(), 200, 6, 0.0025, 10, inputWhiteK.copy(), outputWhiteK.copy())
+#runRBF(inputBothT.copy(), outputBothT.copy(), 100, 4, 0.0002, 10, inputBothK.copy(), outputBothK.copy())
+#runRBF(inputColorsT.copy(), outputColorsT.copy(), 1000, 20, 0.005, 0.1, inputColorsK.copy(), outputColorsK.copy())
 
 #runPNN(inputRedT.copy(), outputRedT.copy(), 0.5, inputRedK.copy(), outputRedK.copy())
 #runPNN(inputWhiteT.copy(), outputWhiteT.copy(), 0.5, inputWhiteK.copy(), outputWhiteK.copy())
-#runPNN(inputBothT.copy(), outputColorsT.copy(), 0.5, inputBothK.copy(), outputColorsK.copy())
+#runPNN(inputColorsT.copy(), outputColorsT.copy(), 0.5, inputColorsK.copy(), outputColorsK.copy())
 # więcej max gałęzi przy większej ilości cech?
 # przy tych danych więcej gałęzi != większa szansa na trafienie
 # 3 prawdopodobnie optymalne dla 4 i możliwe że w ogóle
-# więcej cech nie oznacza większej celności,
+# więcej parametrów nie oznacza większej celności,
 # warto sprawdzić które kombinacje dają największą celność i wrzucić je jako jedyne
-drzewa = []
-for x1 in range(0, 11):
-    for x2 in range(x1 + 1, 11):
-        drzewa.append([x1, x2])
+#drzewa = []
+#for x1 in range(0, 11):
+#    for x2 in range(x1 + 1, 11):
+#        drzewa.append([x1, x2])
+#for x1 in range(0, 11):
+#    for x2 in range(x1 + 1, 11):
+#        for x3 in range(x2 + 1, 11):
+#            drzewa.append([x1, x2, x3])
 #print(drzewa)
 #drzewa = [[0, 1], [0, 2], [0, 3], [0, 4], [0,5], [0,6], [0,7], [0,8], [0,9], [0, 10]]
 #drzewa = [[4, 5], [6, 7], [9, 10]]
@@ -160,9 +173,12 @@ for x1 in range(0, 11):
 #drzewa = [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]]
 #drzewa = [[0, 2, 7, 8, 9, 10]]
 #drzewa = [[10]]
-for ilosc in iloscigalezi:
-    kolumnyDrzew.append(runDTF(inputRedT.copy(), outputRedT.copy(), drzewa, ilosc, inputRedK.copy(), outputRedK.copy()))
-#runDTF(inputRedT.copy(), outputRedT.copy(), drzewa, 8, inputRedK.copy(), outputRedK.copy())
+#for ilosc in iloscigalezi:
+    #kolumnyDrzew.append(runDTF(inputRedT.copy(), outputRedT.copy(), drzewa, ilosc, inputRedK.copy(), outputRedK.copy()))
+    #kolumnyDrzew.append(runDTF(inputWhiteT.copy(), outputWhiteT.copy(), drzewa, ilosc, inputWhiteK.copy(), outputWhiteK.copy()))
+    #kolumnyDrzew.append(runDTF(inputBothT.copy(), outputBothT.copy(), drzewa, ilosc, inputBothK.copy(), outputBothK.copy()))
+    #kolumnyDrzew.append(runDTF(inputColorsT.copy(), outputColorsT.copy(), drzewa, ilosc, inputColorsK.copy(), outputColorsK.copy()))
+#runDTF(inputRedT.copy(), outputRedT.copy(), drzewa, 6, inputRedK.copy(), outputRedK.copy())
 #runDTF(inputWhiteT.copy(), outputWhiteT.copy(), drzewa, 3, inputWhiteK.copy(), outputWhiteK.copy())
 #runDTF(inputBothT.copy(), outputColorsT.copy(), drzewa, 3, inputBothK.copy(), outputColorsK.copy())
 if len(kolumny) != 0:
@@ -186,22 +202,18 @@ if len(kolumny) != 0:
 if len(kolumnyDrzew) != 0:
     fig = plt.figure(figsize=(10, 5))    # Create evenly spaced x-axis values
     x_pos = np.arange(len(iloscigalezi))    # Create the bar plot with evenly spaced x-axis
-    plt.bar(x_pos, kolumnyDrzew, color='maroon', width=0.4)
+    plt.bar(x_pos, kolumnyDrzew, color='purple', width=0.4)
     labels = []
     for n in iloscigalezi:
         labels.append(str(n))
     # Set the x-axis tick labels
     plt.xticks(x_pos, labels)
-    plt.xlabel("maksymalna ilość gałęzi")
+    plt.xlabel("maksymalna wysokość drzewa")
     plt.ylabel("Celność")
     plt.show()
 
 if len(wyniki) != 0:
     def polygon_under_graph(x, y):
-        """
-        Construct the vertex list which defines the polygon filling the space under
-        the (x, y) line graph. This assumes x is in ascending order.
-        """
         temp2 = np.array([wyniki[y][m] for m in range(len(wyniki[y]))])
         return [(x[0], 0.), *zip(x, temp2), (x[-1], 0.)]
 
@@ -217,12 +229,13 @@ if len(wyniki) != 0:
     # Create evenly spaced y-values
     y_values = np.linspace(alfy[0], alfy[-1], len(alfy))
 
-    poly = PolyCollection(verts, facecolors=facecolors, alpha=.95)
+    poly = PolyCollection(verts, facecolors=facecolors, alpha=.7)
     ax.add_collection3d(poly, zs=y_values, zdir='y')
     ax.view_init(15, -75, 0)
 
     ax.set(xlim=(x[0], x[-1]), ylim=(alfy[0], alfy[-1]), zlim=(0, 1), xlabel='Epoka', zlabel='Wsp. trafień',
-           ylabel='Wsp. uczenia')
+           #ylabel='Wsp. uczenia')
+           ylabel='Wsp. beta')
 
     # Remove y-axis tick labels
     ax.set_yticks([])
