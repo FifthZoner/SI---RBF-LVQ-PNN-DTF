@@ -58,33 +58,33 @@ def runRBF(wejscie, wyniki, liczbaEpok, neuronyNaKlase, alfa, beta, wejscieKontr
     ##ax.set_title('3d Scatter plot geeks for geeks')
     #plt.show()
 
-    def polygon_under_graph(x, y):
-        """
-        Construct the vertex list which defines the polygon filling the space under
-        the (x, y) line graph. This assumes x is in ascending order.
-        """
-        temp = np.array([math.pow(2.71828, -y * math.pow(x[n], 2)) for n in range(len(x))])
-        return [(x[0], 0.), *zip(x, temp), (x[-1], 0.)]
-        #return [np.float_power(2.71828, -y * np.float_power(x, 2)), 0, 0]
-
-    ax = plt.figure().add_subplot(projection='3d')
-
-    x = np.linspace(0., 1., 100)
-    lambdas = range(1, 10)
-
-    # verts[i] is a list of (x, y) pairs defining polygon i.
-    gamma = np.vectorize(math.gamma)
-    verts = [polygon_under_graph(x, l)
-             for l in lambdas]
-    facecolors = plt.colormaps['viridis_r'](np.linspace(0, 1, len(verts)))
-
-    poly = PolyCollection(verts, facecolors=facecolors, alpha=.7)
-    ax.add_collection3d(poly, zs=lambdas, zdir='y')
-    ax.view_init(15, 60, 0)
-    ax.set(xlim=(0, 1), ylim=(1, 10), zlim=(0, 1),
-           xlabel='Odległość od punktu', ylabel='Wartość beta', zlabel='Wartość funkcji aktywacji')
-
-    plt.show()
+    #def polygon_under_graph(x, y):
+    #    """
+    #    Construct the vertex list which defines the polygon filling the space under
+    #    the (x, y) line graph. This assumes x is in ascending order.
+    #    """
+    #    temp = np.array([math.pow(2.71828, -y * math.pow(x[n], 2)) for n in range(len(x))])
+    #    return [(x[0], 0.), *zip(x, temp), (x[-1], 0.)]
+    #    #return [np.float_power(2.71828, -y * np.float_power(x, 2)), 0, 0]
+#
+    #ax = plt.figure().add_subplot(projection='3d')
+#
+    #x = np.linspace(0., 1., 100)
+    #lambdas = range(1, 10)
+#
+    ## verts[i] is a list of (x, y) pairs defining polygon i.
+    #gamma = np.vectorize(math.gamma)
+    #verts = [polygon_under_graph(x, l)
+    #         for l in lambdas]
+    #facecolors = plt.colormaps['viridis_r'](np.linspace(0, 1, len(verts)))
+#
+    #poly = PolyCollection(verts, facecolors=facecolors, alpha=.7)
+    #ax.add_collection3d(poly, zs=lambdas, zdir='y')
+    #ax.view_init(15, 60, 0)
+    #ax.set(xlim=(0, 1), ylim=(1, 10), zlim=(0, 1),
+    #       xlabel='Odległość od punktu', ylabel='Wartość beta', zlabel='Wartość funkcji aktywacji')
+#
+    #plt.show()
 
 
 

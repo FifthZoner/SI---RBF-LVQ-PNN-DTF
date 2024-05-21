@@ -69,3 +69,4 @@ def runPNN(wejscie, wyniki, beta, wejscieKontrolne, wyjscieKontrolne):
 
 
     print("Trafność na danych kontrolnych: ", liczbaTrafionych, " / ", len(wejscieKontrolne), " ( ", liczbaTrafionych / len(wejscieKontrolne) * 100, "% )")
+    return liczbaTrafionych / len(wejscieKontrolne)
