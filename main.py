@@ -115,11 +115,12 @@ kolumnyDrzew = []
 #alfy = [0.00025, 0.001,  0.0025, 0.005, 0.01]
 alfy = [0.0000001, 0.000001, 0.00001, 0.0001,  0.001]
 bety = [0.001, 0.1, 10, 1000, 100000, 10000000, 1000000000]
-ilosciNeuronow = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+ilosciNeuronow = [2, 4, 6, 8, 10]
 #iloscigalezi = [1, 2, 3, 4, 5, 6]
 iloscigalezi = [1, 2, 3, 4, 5]
+wspolczynniki = [0.1, 0.25, 0.5, 0.75, 0.9]
 #iloscigalezi = [3]
-iloscEpok = 750
+iloscEpok = 500
 
 
 # badanie alfy
@@ -131,14 +132,25 @@ iloscEpok = 750
     #wyniki.append(runRBF(inputColorsT.copy(), outputColorsT.copy(), iloscEpok, 5, alfa, 5, inputColorsK.copy(), outputColorsK.copy()))
 
 # badanie bety
-for beta in bety:
+#for beta in bety:
     #kolumny.append(runPNN(inputRedT.copy(), outputRedT.copy(), beta, inputRedK.copy(), outputRedK.copy()))
     #kolumny.append(runPNN(inputWhiteT.copy(), outputWhiteT.copy(), beta, inputWhiteK.copy(), outputWhiteK.copy()))
     #kolumny.append(runPNN(inputBothT.copy(), outputBothT.copy(), beta, inputBothK.copy(), outputBothK.copy()))
-    wyniki.append(runRBF(inputColorsT.copy(), outputColorsT.copy(), iloscEpok, 3, 0.00005, beta, inputColorsK.copy(), outputColorsK.copy()))
+    #kolumny.append(runPNN(inputColorsT.copy(), outputColorsT.copy(), beta, inputColorsK.copy(), outputColorsK.copy()))
+    #wyniki.append(runRBF(inputColorsT.copy(), outputColorsT.copy(), iloscEpok, 3, 0.00005, beta, inputColorsK.copy(), outputColorsK.copy()))
+    #wyniki.append(runRBF(inputRedT.copy(), outputRedT.copy(), iloscEpok, 5, 0.00025, beta, inputRedK.copy(), outputRedK.copy()))
 
 #for ilosc in ilosciNeuronow:
-#    wyniki.append(runRBF(inputColorsT.copy(), outputColorsT.copy(), iloscEpok, ilosc, 0.0005, 10, inputColorsK.copy(), outputColorsK.copy()))
+    #wyniki.append(runRBF(inputColorsT.copy(), outputColorsT.copy(), iloscEpok, ilosc, 0.0005, 10, inputColorsK.copy(), outputColorsK.copy()))
+    #wyniki.append(runRBF(inputRedT.copy(), outputRedT.copy(), iloscEpok, ilosc, 0.0005, 10, inputRedK.copy(), outputRedK.copy()))
+
+#badanie współczynnika treningowych
+for wsp in wspolczynniki:
+    temp = naTreningoweIKontrolne(inputRed, outputRed, wsp)
+    inputRedT, outputRedT, inputRedK, outputRedK = temp[0], temp[1], temp[2], temp[3]
+    temp = naTreningoweIKontrolne(inputBoth, outputColors, wsp)
+    inputColorsT, outputColorsT, inputColorsK, outputColorsK = temp[0], temp[1], temp[2], temp[3]
+    wyniki.append(runLVQ(inputRedT.copy(), outputRedT.copy(), iloscEpok, 0.001, inputRedK.copy(), outputRedK.copy()))
 
 #runLVQ(inputRedT.copy(), outputRedT.copy(), 500, 0.0001, inputRedK.copy(), outputRedK.copy())
 #runLVQ(inputWhiteT.copy(), outputWhiteT.copy(), 500, 0.001, inputWhiteK.copy(), outputWhiteK.copy())
@@ -158,10 +170,10 @@ for beta in bety:
 # 3 prawdopodobnie optymalne dla 4 i możliwe że w ogóle
 # więcej parametrów nie oznacza większej celności,
 # warto sprawdzić które kombinacje dają największą celność i wrzucić je jako jedyne
-#drzewa = []
-#for x1 in range(0, 11):
-#    for x2 in range(x1 + 1, 11):
-#        drzewa.append([x1, x2])
+drzewa = []
+for x1 in range(0, 11):
+    for x2 in range(x1 + 1, 11):
+        drzewa.append([x1, x2])
 #for x1 in range(0, 11):
 #    for x2 in range(x1 + 1, 11):
 #        for x3 in range(x2 + 1, 11):
@@ -173,11 +185,11 @@ for beta in bety:
 #drzewa = [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]]
 #drzewa = [[0, 2, 7, 8, 9, 10]]
 #drzewa = [[10]]
-#for ilosc in iloscigalezi:
+for ilosc in iloscigalezi:
     #kolumnyDrzew.append(runDTF(inputRedT.copy(), outputRedT.copy(), drzewa, ilosc, inputRedK.copy(), outputRedK.copy()))
     #kolumnyDrzew.append(runDTF(inputWhiteT.copy(), outputWhiteT.copy(), drzewa, ilosc, inputWhiteK.copy(), outputWhiteK.copy()))
     #kolumnyDrzew.append(runDTF(inputBothT.copy(), outputBothT.copy(), drzewa, ilosc, inputBothK.copy(), outputBothK.copy()))
-    #kolumnyDrzew.append(runDTF(inputColorsT.copy(), outputColorsT.copy(), drzewa, ilosc, inputColorsK.copy(), outputColorsK.copy()))
+    kolumnyDrzew.append(runDTF(inputColorsT.copy(), outputColorsT.copy(), drzewa, ilosc, inputColorsK.copy(), outputColorsK.copy()))
 #runDTF(inputRedT.copy(), outputRedT.copy(), drzewa, 6, inputRedK.copy(), outputRedK.copy())
 #runDTF(inputWhiteT.copy(), outputWhiteT.copy(), drzewa, 3, inputWhiteK.copy(), outputWhiteK.copy())
 #runDTF(inputBothT.copy(), outputColorsT.copy(), drzewa, 3, inputBothK.copy(), outputColorsK.copy())
@@ -213,6 +225,7 @@ if len(kolumnyDrzew) != 0:
     plt.show()
 
 if len(wyniki) != 0:
+    ktory = bety
     def polygon_under_graph(x, y):
         temp2 = np.array([wyniki[y][m] for m in range(len(wyniki[y]))])
         return [(x[0], 0.), *zip(x, temp2), (x[-1], 0.)]
@@ -223,19 +236,22 @@ if len(wyniki) != 0:
 
     # verts[i] is a list of (x, y) pairs defining polygon i.
     gamma = np.vectorize(math.gamma)
-    verts = [polygon_under_graph(x, l) for l in range(len(bety))]
+    verts = [polygon_under_graph(x, l) for l in range(len(ktory))]
     facecolors = plt.colormaps['jet'](np.linspace(0, 1, len(verts)))
 
     # Create evenly spaced y-values
-    y_values = np.linspace(bety[0], bety[-1], len(bety))
+    y_values = np.linspace(ktory[0], ktory[-1], len(ktory))
 
-    poly = PolyCollection(verts, facecolors=facecolors, alpha=.7)
+    poly = PolyCollection(verts, facecolors=facecolors, alpha=.9)
     ax.add_collection3d(poly, zs=y_values, zdir='y')
     ax.view_init(15, -75, 0)
+    #ax.view_init(15, 105, 0)
 
-    ax.set(xlim=(x[0], x[-1]), ylim=(bety[0], bety[-1]), zlim=(0, 1), xlabel='Epoka', zlabel='Wsp. trafień',
+    ax.set(xlim=(x[0], x[-1]), ylim=(ktory[0], ktory[-1]), zlim=(0, 1), xlabel='Epoka', zlabel='Wsp. trafień',
            #ylabel='Wsp. uczenia')
-           ylabel='Wsp. beta')
+           #ylabel='Wsp. beta')
+           #ylabel='Ilość neuronów')
+           ylabel='Wsp. danych weryfikacyjnych')
 
     # Remove y-axis tick labels
     ax.set_yticks([])
@@ -246,6 +262,8 @@ if len(wyniki) != 0:
         # czerwony
         # ax.text(1.29 * iloscEpok, y, -0.1, "{:.{}e}".format(alfy[i], 0), va='center', ha='right')
         # biały
-        ax.text(1.21 * iloscEpok, y, -0.1, "{:.{}e}".format(bety[i], 0), va='center', ha='right')
+        ax.text(1.19 * iloscEpok, y, -0.1, "{:.{}e}".format(ktory[i], 0), va='center', ha='right')
+        #ax.text(1.19 * iloscEpok, y, -0.1, str(ktory[i]), va='center', ha='right')
+        #ax.text(1 - (0.19 * iloscEpok), y, -0.1, "{:.{}e}".format(bety[i], 0), va='center', ha='right')
 
     plt.show()

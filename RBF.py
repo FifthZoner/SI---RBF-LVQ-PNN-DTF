@@ -15,13 +15,13 @@ def aktywacjaRBF(prototyp, dane, beta):
 # funkcja ogólna
 def runRBF(wejscie, wyniki, liczbaEpok, neuronyNaKlase, alfa, beta, wejscieKontrolne, wyjscieKontrolne):
     # wykres funkcji aktywacji
-    wykresFunkcjiAktywacji = []
-    for n in range(1000):
-        wykresFunkcjiAktywacji.append(aktywacjaRBF([n / 1000], [0], 100))
-    plt.plot(wykresFunkcjiAktywacji)
-    plt.xlabel("Odległość od celu")
-    plt.ylabel("Wartość funkcji aktywacji")
-    plt.show()
+    #wykresFunkcjiAktywacji = []
+    #for n in range(1000):
+    #    wykresFunkcjiAktywacji.append(aktywacjaRBF([n / 1000], [0], 100))
+    #plt.plot(wykresFunkcjiAktywacji)
+    #plt.xlabel("Odległość od celu")
+    #plt.ylabel("Wartość funkcji aktywacji")
+    #plt.show()
 
     #wykresFunkcjiAktywacji3D = [[], [] ,[], [[] for n in range(100)], [[] for n in range(100)], [[] for n in range(100)]]
     #for b in range(100):
@@ -156,10 +156,10 @@ def runRBF(wejscie, wyniki, liczbaEpok, neuronyNaKlase, alfa, beta, wejscieKontr
         celnosc.append(liczbaTrafionych / len(wejscie) * 100)
 
     # wyswietlanie wyników
-    plt.plot(celnosc)
-    plt.ylabel("Procent poprawnie zaklasyfikowanych")
-    plt.xlabel("Numer epoki")
-    plt.show()
+    #plt.plot(celnosc)
+    #plt.ylabel("Procent poprawnie zaklasyfikowanych")
+    #plt.xlabel("Numer epoki")
+    #plt.show()
 
     liczbaTrafionych = 0
     for wiersz in range(0, len(wejscieKontrolne)):
