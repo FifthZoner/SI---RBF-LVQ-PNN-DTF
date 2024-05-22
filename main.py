@@ -76,13 +76,20 @@ for column in range(0, 11):
 
 inputLabels = ["fixed acidity", "volatile acidity", "citric acid", "residual sugar", "chlorides", "free sulfur dioxide", "total sulfur dioxide", "density", "pH"]
 
+for n in range(len(outputRed)):
+    outputRed[n] /= 10
+
+for n in range(len(outputWhite)):
+    outputWhite[n] /= 10
+
 plt.plot(inputRed, 'o', markersize=1)
+plt.plot(outputRed, 'o', markersize=3)
 plt.ylabel("Wartości znormalizowane dla czerwonego")
 #plt.legend(inputLabels)
 plt.show()
 
 plt.plot(inputWhite, 'o', markersize=1)
-#plt.plot(outputWhite, 'o', markersize=3)
+plt.plot(outputWhite, 'o', markersize=3)
 plt.ylabel("Wartości znormalizowane dla białego")
 #plt.legend(inputLabels)
 plt.show()
