@@ -114,12 +114,12 @@ kolumny = []
 kolumnyDrzew = []
 #alfy = [0.00025, 0.001,  0.0025, 0.005, 0.01]
 alfy = [0.0000001, 0.000001, 0.00001, 0.0001,  0.001]
-bety = [0.001, 0.01, 0.1, 1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000]
+bety = [0.001, 0.1, 10, 1000, 100000, 10000000, 1000000000]
 ilosciNeuronow = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 #iloscigalezi = [1, 2, 3, 4, 5, 6]
 iloscigalezi = [1, 2, 3, 4, 5]
 #iloscigalezi = [3]
-iloscEpok = 1500
+iloscEpok = 750
 
 
 # badanie alfy
@@ -135,7 +135,7 @@ for beta in bety:
     #kolumny.append(runPNN(inputRedT.copy(), outputRedT.copy(), beta, inputRedK.copy(), outputRedK.copy()))
     #kolumny.append(runPNN(inputWhiteT.copy(), outputWhiteT.copy(), beta, inputWhiteK.copy(), outputWhiteK.copy()))
     #kolumny.append(runPNN(inputBothT.copy(), outputBothT.copy(), beta, inputBothK.copy(), outputBothK.copy()))
-    wyniki.append(runRBF(inputColorsT.copy(), outputColorsT.copy(), iloscEpok, 5, 0.00025, beta, inputColorsK.copy(), outputColorsK.copy()))
+    wyniki.append(runRBF(inputColorsT.copy(), outputColorsT.copy(), iloscEpok, 3, 0.00005, beta, inputColorsK.copy(), outputColorsK.copy()))
 
 #for ilosc in ilosciNeuronow:
 #    wyniki.append(runRBF(inputColorsT.copy(), outputColorsT.copy(), iloscEpok, ilosc, 0.0005, 10, inputColorsK.copy(), outputColorsK.copy()))
@@ -223,17 +223,17 @@ if len(wyniki) != 0:
 
     # verts[i] is a list of (x, y) pairs defining polygon i.
     gamma = np.vectorize(math.gamma)
-    verts = [polygon_under_graph(x, l) for l in range(len(alfy))]
+    verts = [polygon_under_graph(x, l) for l in range(len(bety))]
     facecolors = plt.colormaps['jet'](np.linspace(0, 1, len(verts)))
 
     # Create evenly spaced y-values
-    y_values = np.linspace(alfy[0], alfy[-1], len(alfy))
+    y_values = np.linspace(bety[0], bety[-1], len(bety))
 
     poly = PolyCollection(verts, facecolors=facecolors, alpha=.7)
     ax.add_collection3d(poly, zs=y_values, zdir='y')
     ax.view_init(15, -75, 0)
 
-    ax.set(xlim=(x[0], x[-1]), ylim=(alfy[0], alfy[-1]), zlim=(0, 1), xlabel='Epoka', zlabel='Wsp. trafień',
+    ax.set(xlim=(x[0], x[-1]), ylim=(bety[0], bety[-1]), zlim=(0, 1), xlabel='Epoka', zlabel='Wsp. trafień',
            #ylabel='Wsp. uczenia')
            ylabel='Wsp. beta')
 
@@ -246,6 +246,6 @@ if len(wyniki) != 0:
         # czerwony
         # ax.text(1.29 * iloscEpok, y, -0.1, "{:.{}e}".format(alfy[i], 0), va='center', ha='right')
         # biały
-        ax.text(1.21 * iloscEpok, y, -0.1, "{:.{}e}".format(alfy[i], 0), va='center', ha='right')
+        ax.text(1.21 * iloscEpok, y, -0.1, "{:.{}e}".format(bety[i], 0), va='center', ha='right')
 
     plt.show()

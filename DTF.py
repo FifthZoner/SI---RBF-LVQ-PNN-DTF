@@ -45,8 +45,6 @@ def budowaDrzewa(wejscie, wyjscie, wartosci, ktoreWejscia, pozostalaWysokosc, un
         wynik.nrCechy = max
         wynik.gini = gini
         return wynik
-
-    # do zapisywania minimalnych wartości
     minGini = 10
     minIndeksTymczasowyWejscia = 0
     minKtoraWartoscWejscia = 0
@@ -66,9 +64,7 @@ def budowaDrzewa(wejscie, wyjscie, wartosci, ktoreWejscia, pozostalaWysokosc, un
                     if wejscie[wiersz][obecnaKolumna[0]] < wartosci[obecnaKolumna[0]][obecnaKolumna[1]] or wejscie[wiersz][obecnaKolumna[0]] > wartosci[obecnaKolumna[0]][obecnaKolumna[2] - 1]:
                         czyLiczyc = False
                 # sprawdzanie czy liczy się do trafionych
-                #print(czyLiczyc)
                 if czyLiczyc:
-
                     ileTrafienCech[wyjscie[wiersz]][1] += 1
                     if wejscie[wiersz][obecnaKolumna[0]] <= wartosci[obecnaKolumna[0]][obecnaKtoraWartosc]:
                         ileUjetychWejsc[0] += 1
@@ -77,9 +73,6 @@ def budowaDrzewa(wejscie, wyjscie, wartosci, ktoreWejscia, pozostalaWysokosc, un
                     else:
                         ileUjetychWejsc[1] += 1
                         sumyTrafien[1] += 1
-
-            # szukamy cechy z największą ilością trafień
-            #gini = 1 - (ileTrafienCech[max] / ileUjetychWejsc)
             gini = 1
             giniPrawdziwe = 1
             giniFalszywe =1
@@ -99,24 +92,17 @@ def budowaDrzewa(wejscie, wyjscie, wartosci, ktoreWejscia, pozostalaWysokosc, un
                 minIndeksTymczasowyWejscia = obecnaKolumna[3]
                 minKtoraWartoscWejscia = obecnaKtoraWartosc
                 minCecha = max
-                #print(max)
                 if gini == 0:
                     break
-
             if minGini == 0:
                 break
-        #print(minCecha)
         if minGini == 0:
             break
-
-    # po sprawdzeniu możemy wreszcie stworzyć gałąź drzewa z najlepszą wartością
     rezultat = Drzewo()
     rezultat.gini = minGini
     rezultat.nrCechy = minCecha
     rezultat.wartosc = wartosci[ktoreWejscia[minIndeksTymczasowyWejscia][0]][minKtoraWartoscWejscia]
     rezultat.nrWejscia = ktoreWejscia[minIndeksTymczasowyWejscia][0]
-
-    # gini to 0, trzeba stworzyć tylko gałąź dla sytuacji fałszywej
     if minGini == 0:
         # dodawanie fałszywej jeżeli jeszcze można
         temp = [x.copy() for x in ktoreWejscia]
@@ -129,17 +115,14 @@ def budowaDrzewa(wejscie, wyjscie, wartosci, ktoreWejscia, pozostalaWysokosc, un
             rezultat.falszywa = budowaDrzewa(wejscie, wyjscie, wartosci, temp.copy(), pozostalaWysokosc - 1, unikalneCechy)
     else:
         # dodawanie obu jeżeli można
-        #print("przed ", ktoreWejscia)
         temp = [x.copy() for x in ktoreWejscia]
         temp[minIndeksTymczasowyWejscia][2] = minKtoraWartoscWejscia
         mozna = False
         for n in temp:
             if n[2] - n[1] > 1:
                 mozna = True
-        #print("po ", ktoreWejscia)
         if mozna:
             rezultat.prawdziwa = budowaDrzewa(wejscie, wyjscie, wartosci, temp.copy(), pozostalaWysokosc - 1, unikalneCechy)
-
         temp = [x.copy() for x in ktoreWejscia]
         temp[minIndeksTymczasowyWejscia][1] = minKtoraWartoscWejscia + 1
         mozna = False
@@ -148,8 +131,6 @@ def budowaDrzewa(wejscie, wyjscie, wartosci, ktoreWejscia, pozostalaWysokosc, un
                 mozna = True
         if mozna:
             rezultat.falszywa = budowaDrzewa(wejscie, wyjscie, wartosci, temp.copy(), pozostalaWysokosc - 1, unikalneCechy)
-
-
     return rezultat
 
 # zwraca wynik z gałęzi dla podanego wektora wejściowego
@@ -157,18 +138,14 @@ def wynikZDrzewa(drzewo, wektor):
     if drzewo.prawdziwa == None and drzewo.falszywa == None:
         return drzewo.nrCechy
     elif wektor[drzewo.nrWejscia] <= drzewo.wartosc:
-        # jeżeli warunek został spełniony
         if drzewo.prawdziwa != None:
-            # jeżeli jest dalsza gałąź zwróć wartość z jej sprawdzenia
             return wynikZDrzewa(drzewo.prawdziwa, wektor)
         else:
             return drzewo.nrCechy
     else:
         if drzewo.falszywa != None:
-            # jeżeli jest dalsza gałąź zwróć wartość z jej sprawdzenia
             return wynikZDrzewa(drzewo.falszywa, wektor)
         else:
-            print("To nie powinno się stać!")
             return drzewo.nrCechy
 
 
